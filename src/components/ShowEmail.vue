@@ -35,12 +35,12 @@ export default {
     closeModal() {
       this.$emit('close_modal')
     },
-    // markAsRead(id) {
-    //   this.$emit('mark_As_Read', id)
-    // },
-    // addtoArchive (id) {
-    //   this.$emit('add_to_Archive', id)
-    // }
+    markAsRead() {
+      //
+    },
+    addtoArchive () {
+      //
+    }
   }
 }
 </script>

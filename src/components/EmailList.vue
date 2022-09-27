@@ -69,7 +69,6 @@ export default {
                 this.displayedEmails = this.archiveEmails
             }
             this.$emit('update_archives', this.archiveEmails.length, this.inboxEmails.length)
-            // this.$emit('get_inbox_count', this.inboxState.inbox.length)
         }
     },
 
@@ -103,6 +102,9 @@ export default {
             }
             if (event.key === "Esc") {
                 this.$emit('close_modal')
+            }
+            if (event.key === "a") {
+                this.addtoArchive()
             }
         },
         showOneEmail (mail) {
@@ -161,7 +163,6 @@ export default {
             })
             this.displayedEmails = this.inboxEmails
             this.$emit('update_archives', this.archiveEmails.length, this.inboxEmails.length)
-            // this.$store.dispatch("archiveModule/updateArchiveList", {newArchives: newArchives});
         }
     }
 }
