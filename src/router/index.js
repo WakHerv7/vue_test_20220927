@@ -1,15 +1,17 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import EmailIndex from '@/components/EmailIndex'
+import {createRouter, createWebHistory} from 'vue-router';
+import EmailIndex from '@/components/EmailIndex';
 
-Vue.use(Router)
+const routes = [
+  {
+    path: '/',
+    name: 'EmailIndex',
+    component: EmailIndex
+}
+]
 
-export default new Router({
-  routes: [
-    {
-        path: '/',
-        name: 'EmailIndex',
-        component: EmailIndex
-    }
-  ]
+const router = createRouter({
+    history: createWebHistory(process.env.BASE_URL),
+    routes
 })
+
+export default router

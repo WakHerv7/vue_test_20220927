@@ -27,6 +27,7 @@
     background-color: #eee;
     border-radius: 5px;
     overflow: hidden;
+    border: 1px solid #aaa;
   }
   
   .check_container:hover input ~ .checkmark {
