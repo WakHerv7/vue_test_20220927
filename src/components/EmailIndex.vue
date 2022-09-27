@@ -3,7 +3,7 @@
     <div class="left_sidebar">
         <div class="buttons_container">
             <a href="#" @click="goToPage('Inbox')" class="btn_sidebar">Inbox ({{inboxCount}})</a>
-            <a href="#" @click="goToPage('Archive')" class="btn_sidebar">Archive</a>
+            <a href="#" @click="goToPage('Archive')" class="btn_sidebar">Archive ({{archiveCount}})</a>
         </div>
         <div class="buttons_container">
             <a href="#" class="btn_sidebar">Logout</a>
@@ -11,7 +11,8 @@
     </div>
     <EmailList :title=listTitle
     @get_inbox_count=getInboxCount
-    @show_email=showEmail>
+    @show_email=showEmail
+    @update_archives=updateArchives>
     </EmailList>    
   </section>
   <ShowEmail :oneEmail=oneEmail 
@@ -30,6 +31,7 @@ export default {
     return {
       listTitle: 'Inbox',
       inboxCount: 0,
+      archiveCount: 0,
       showModal: false,
       oneEmail: {}
     }
@@ -52,6 +54,10 @@ export default {
     },
     closeModal() {
       this.showModal = false
+    },
+    updateArchives(valueArch, valueInbox) {
+      this.archiveCount = valueArch
+      this.inboxCount = valueInbox
     }
   }
 }

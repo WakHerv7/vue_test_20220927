@@ -134,6 +134,7 @@ ul.emails_container li span {
 
 .close_modal_btn {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .modal_content .control_buttons_container {

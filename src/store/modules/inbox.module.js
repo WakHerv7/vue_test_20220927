@@ -8,7 +8,7 @@ export default {
             inbox: [],
             inboxCount: 0,
             errorMessage: null
-        }
+        },
     },
     mutations: {
         GET_INBOX_REQUEST: function (state) {

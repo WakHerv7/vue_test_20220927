@@ -1,10 +1,10 @@
 <template>
-  <section @click="closeModal()" class="modal_container">
+  <section  @click="closeModal()" class="modal_container">
       <div class="modal_content">
           <div @click="closeModal()" class="close_modal_btn">Close(Esc)</div>
           <div class="control_buttons_container">
-              <button class="markAsReadAll">Mark as read (r)</button>
-              <button class="ArchiveAll">Archive (a)</button>
+              <button @click="markAsRead()" class="markAsReadAll">Mark as read (r)</button>
+              <button @click="addtoArchive()" class="ArchiveAll">Archive (a)</button>
           </div>
           <strong>{{oneEmail.title}}</strong>
           <p>
@@ -20,10 +20,27 @@ export default {
   props: {
       oneEmail: Object
   },
+  mounted() {
+    document.addEventListener("keyup", this.onKeyup);
+  },
+  beforeUnmount() {
+    document.removeEventListener("keyup", this.onKeyup);
+  },
   methods: {
+    onKeyup(event) {
+        if (event.key === "Esc") {
+            this.$emit('close_modal')
+        }
+    },
     closeModal() {
       this.$emit('close_modal')
-    }
+    },
+    // markAsRead(id) {
+    //   this.$emit('mark_As_Read', id)
+    // },
+    // addtoArchive (id) {
+    //   this.$emit('add_to_Archive', id)
+    // }
   }
 }
 </script>
