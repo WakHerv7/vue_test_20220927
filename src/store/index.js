@@ -15,10 +15,10 @@ export default createStore({
     },
     getters: {
         getInboxState: function (state) {
-            return state.inboxState.inboxList;
+            return state.inboxState;
         },
         getArchiveState: function (state) {
-            return state.archiveState.archiveList;
+            return state.inboxState.archiveList;
         },
     }
 })

@@ -9,15 +9,20 @@
             <a href="#" class="btn_sidebar">Logout</a>
         </div>
     </div>
-    <EmailList :title=listTitle
+    <EmailList 
+    :title=listTitle
+    :updatedEmailBool = updatedEmailBool
     @get_inbox_count=getInboxCount
     @show_email=showEmail
-    @update_archives=updateArchives>
+    @update_email_count=updateEmailCount>
     </EmailList>    
   </section>
-  <ShowEmail :oneEmail=oneEmail 
+  <ShowEmail 
+  :title=listTitle
+  :oneEmail=oneEmail 
   v-if="showModal"
-  @close_modal=closeModal />
+  @close_modal=closeModal
+  @update_page=updateEmailBoolValue />
 </template>
 
 <script>
@@ -33,7 +38,8 @@ export default {
       inboxCount: 0,
       archiveCount: 0,
       showModal: false,
-      oneEmail: {}
+      oneEmail: {},
+      updatedEmailBool: false
     }
   },
   components: {
@@ -41,6 +47,9 @@ export default {
     ShowEmail
   },
   methods: {
+    updateEmailBoolValue () {
+      this.updatedEmailBool = !this.updatedEmailBool
+    },
     goToPage (title) {
         this.listTitle = title
     },
@@ -55,7 +64,7 @@ export default {
     closeModal() {
       this.showModal = false
     },
-    updateArchives(valueArch, valueInbox) {
+    updateEmailCount(valueArch, valueInbox) {
       this.archiveCount = valueArch
       this.inboxCount = valueInbox
     }

@@ -7,13 +7,13 @@ export default {
         },
     },
     mutations: {
-        UPDATE_ARCHIVE_LIST: function (state, payload) {
-            state.archiveList.archive.push(payload)
+        UPDATE_ARCHIVE_LIST: function (state, email) {
+            state.archiveList.archive.push(email)
         }
     },
     actions: {
-        updateArchiveList: function ({commit}, payload) {
-            return commit("UPDATE_ARCHIVE_LIST", payload);
+        updateArchiveList: function ({commit}, email) {
+            return commit("UPDATE_ARCHIVE_LIST", email);
         }
     }
 }

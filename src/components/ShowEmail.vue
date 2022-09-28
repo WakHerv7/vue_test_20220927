@@ -1,5 +1,6 @@
 <template>
-  <section  @click="closeModal()" class="modal_container">
+  <section   class="modal_container">
+      <div @click="closeModal()" class="modal_bg"></div>
       <div class="modal_content">
           <div @click="closeModal()" class="close_modal_btn">Close(Esc)</div>
           <div class="control_buttons_container">
@@ -18,7 +19,8 @@
 export default {
   name: 'ShowEmail',
   props: {
-      oneEmail: Object
+      oneEmail: Object,
+      title: String
   },
   mounted() {
     document.addEventListener("keyup", this.onKeyup);
@@ -28,18 +30,26 @@ export default {
   },
   methods: {
     onKeyup(event) {
-        if (event.key === "Esc") {
+        if (event.key === "Escape") {
             this.$emit('close_modal')
+        }
+        if (event.key === "r" || event.key === "R") {
+                this.markAsRead();
+        }
+        if (event.key === "a" || event.key === "A") {
+            this.addtoArchive()
         }
     },
     closeModal() {
       this.$emit('close_modal')
     },
     markAsRead() {
-      //
+      this.$store.dispatch("inboxModule/markEmailAsRead", {id: this.oneEmail.id, title:this.title});
+      this.$emit('update_page')
     },
     addtoArchive () {
-      //
+      this.$store.dispatch("inboxModule/AddToEmailArchives", {id: this.oneEmail.id, title:this.title});
+      this.$emit('update_page')
     }
   }
 }

@@ -11,13 +11,13 @@
             <button v-if="title == 'Inbox'" class="ArchiveAll" @click="addtoArchive()">Archive (a)</button>
         </div>
 
-        <div v-if="inboxState.loading" class="container">
+        <div v-if="inboxState.inboxList.loading" class="container">
             <span>LOADING</span>
         </div>
-        <div v-if="!inboxState.loading && inboxState.errorMessage" class="container">
+        <div v-if="!inboxState.inboxList.loading && inboxState.inboxList.errorMessage" class="container">
             <span>There is an error !</span>
         </div>
-        <ul v-if="!inboxState.loading && inboxState.inbox.length > 0" class="emails_container">
+        <ul v-if="!inboxState.inboxList.loading && inboxState.inboxList.inbox.length > 0" class="emails_container">
             <li class="email_item" :class="mail.read ? 'email_disabled': ''"
             v-for="mail in displayedEmails" 
             :key="mail.id" 
@@ -50,13 +50,14 @@ export default {
         }
     },
     props: {
-        title: String
+        title: String,
+        updatedEmailBool: Boolean
     },
 
     created: async function () {
         await this.$store.dispatch("inboxModule/getInboxEmails");
-        if (!this.inboxState.loading) {
-            this.inboxState.inbox.forEach((item)=> {
+        if (!this.inboxState.inboxList.loading) {
+            this.inboxState.inboxList.inbox.forEach((item)=> {
                 if (item.archived == false) {
                     this.inboxEmails.push(item)
                 } else {
@@ -68,7 +69,7 @@ export default {
             } else {
                 this.displayedEmails = this.archiveEmails
             }
-            this.$emit('update_archives', this.archiveEmails.length, this.inboxEmails.length)
+            this.$emit('update_email_count', this.archiveEmails.length, this.inboxEmails.length)
         }
     },
 
@@ -78,15 +79,13 @@ export default {
         }),
     },
     watch: { 
-            title: function(newVal) { 
-            if (newVal == "Inbox") {
-                    this.displayedEmails = this.inboxEmails
-            } else {
-                this.displayedEmails = this.archiveEmails
-            }
-            this.selectAll = false
-            this.selectAllMails(false)
-        }
+        title: function(newVal) { 
+            this.updateDisplayedEmails (newVal)
+        },
+        updatedEmailBool: function() { 
+            this.updateDisplayedEmails ()
+            this.$emit('update_email_count', this.archiveEmails.length, this.inboxEmails.length)
+        },
       },
     mounted() {
     document.addEventListener("keyup", this.onKeyup);
@@ -97,18 +96,26 @@ export default {
 
     methods: {
         onKeyup(event) {
-            if (event.key === "r") {
+            if (event.key === "r" || event.key === "R") {
                 this.markAsRead();
             }
-            if (event.key === "Esc") {
-                this.$emit('close_modal')
-            }
-            if (event.key === "a") {
+            if (event.key === "a" || event.key === "A") {
                 this.addtoArchive()
             }
         },
         showOneEmail (mail) {
             this.$emit('show_email', mail)
+        },
+        updateDisplayedEmails (titleValue=this.title) {
+            this.inboxEmails = this.inboxState.inboxList.inbox
+            this.archiveEmails = this.inboxState.archiveList.archive
+            if (titleValue == "Inbox") {
+                this.displayedEmails = this.inboxState.inboxList.inbox
+            } else {
+                this.displayedEmails = this.inboxState.archiveList.archive
+            }
+            this.selectAll = false
+            this.selectAllMails(false)
         },
         updateSelectCount (id, bool) {
             if (!bool) {                
@@ -139,30 +146,18 @@ export default {
             }
             
         },
-        markAsRead() {
-            for (let i = 0; i < this.inboxState.inbox.length; i++) {
-                this.inboxState.inbox[i].read = false
-            } 
+        markAsRead() {            
             this.selectedMails.forEach((id) => {
-                for (let i = 0; i < this.inboxState.inbox.length; i++) {
-                    if(this.inboxState.inbox[i].id == id) {
-                        this.inboxState.inbox[i].read = true
-                    }
-                } 
+                this.$store.dispatch("inboxModule/markEmailAsRead", {id: id, title:this.title});                
+                this.updateDisplayedEmails() 
             })
         },
         addtoArchive () {
             this.selectedMails.forEach((id) => {
-                for (let i = 0; i < this.inboxState.inbox.length; i++) {
-                    if(this.inboxState.inbox[i].id == id) {
-                        this.inboxState.inbox[i].archived = true
-                        this.archiveEmails.push(this.inboxState.inbox[i])
-                        this.inboxEmails = this.inboxEmails.filter((item) => item.id != this.inboxState.inbox[i].id)
-                    }
-                } 
+                this.$store.dispatch("inboxModule/AddToEmailArchives", {id: id, title:this.title});                
+                this.updateDisplayedEmails() 
             })
-            this.displayedEmails = this.inboxEmails
-            this.$emit('update_archives', this.archiveEmails.length, this.inboxEmails.length)
+            this.$emit('update_email_count', this.archiveEmails.length, this.inboxEmails.length)
         }
     }
 }
